@@ -92,11 +92,11 @@ jobs:
 
           # Add the domain to the project
           echo "Adding domain to project: $FULL_DOMAIN"
-          vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }} || true
+          vercel domains add next-tutorial.dev --token=${{ secrets.VERCEL_TOKEN }} || true
 
           # Assign the domain to the deployment
           echo "Assigning domain to deployment: $FULL_DOMAIN"
-          if ! vercel alias set ${{ env.DEPLOYMENT_URL }} $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
+          if ! vercel alias set ${{ env.DEPLOYMENT_URL }} next-tutorial.dev --token=${{ secrets.VERCEL_TOKEN }}; then
             echo "Failed to assign custom domain"
             exit 1
           fi
