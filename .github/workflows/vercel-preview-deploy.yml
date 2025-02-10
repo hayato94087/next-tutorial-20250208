@@ -92,7 +92,7 @@ jobs:
 
           # Add the domain to the project with --force flag
           echo "Adding domain to project: $FULL_DOMAIN"
-          if ! vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN_FULL }}; then
+          if ! vercel domains add $FULL_DOMAIN next-tutorial-20250208 --token=${{ secrets.VERCEL_TOKEN }}; then
             echo "Failed to add domain to project"
             exit 1
           fi
