@@ -92,10 +92,7 @@ jobs:
 
           # Add the domain to the project
           echo "Adding domain to project: $FULL_DOMAIN"
-          if ! vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
-            echo "Failed to add domain to project"
-            exit 1
-          fi
+          vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }} || true
 
           # Assign the domain to the deployment
           echo "Assigning domain to deployment: $FULL_DOMAIN"
