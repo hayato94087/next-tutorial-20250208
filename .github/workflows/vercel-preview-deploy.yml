@@ -85,7 +85,26 @@ jobs:
 
       - name: Generate Random Subdomain and Assign Custom Domain
         run: |
-          vercel domains add next-tutorial.dev --token=${{ secrets.VERCEL_TOKEN }}
+          # Generate a random 8-character alphanumeric string for the subdomain
+          RANDOM_SUBDOMAIN=$(openssl rand -base64 6 | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+          FULL_DOMAIN="${RANDOM_SUBDOMAIN}.${{ secrets.DOMAIN }}"
+          echo "Generated subdomain: $FULL_DOMAIN"
+
+          # Add the domain to the project
+          echo "Adding domain to project: $FULL_DOMAIN"
+          if ! vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
+            echo "Failed to add domain to project"
+            exit 1
+          fi
+
+          # Assign the domain to the deployment
+          echo "Assigning domain to deployment: $FULL_DOMAIN"
+          if ! vercel alias set ${{ env.DEPLOYMENT_URL }} $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
+            echo "Failed to assign custom domain"
+            exit 1
+          fi
+          echo "Custom domain assigned successfully: $FULL_DOMAIN"
+          echo "PREVIEW_URL=https://$FULL_DOMAIN" >> $GITHUB_ENV
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
