@@ -91,6 +91,7 @@ jobs:
           echo "Generated subdomain: $FULL_DOMAIN"
 
           # Add the domain to the project with --force flag
+          echo "Adding domain to project: $FULL_DOMAIN"
           if ! vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }} --force; then
             echo "Failed to add domain to project"
             exit 1
@@ -100,6 +101,7 @@ jobs:
           sleep 10
 
           # Assign the domain to the deployment
+          echo "Assigning domain to deployment: $FULL_DOMAIN"
           if ! vercel alias set ${{ env.DEPLOYMENT_URL }} $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
             echo "Failed to assign custom domain"
             exit 1
