@@ -90,9 +90,6 @@ jobs:
           FULL_DOMAIN="${RANDOM_SUBDOMAIN}.${{ secrets.DOMAIN }}"
           echo "Generated subdomain: $FULL_DOMAIN"
 
-          # List domains instead of verify
-          vercel domains ls --token=${{ secrets.VERCEL_TOKEN }}
-
           # Add the domain to the project with --force flag
           if ! vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }} --force; then
             echo "Failed to add domain to project"
