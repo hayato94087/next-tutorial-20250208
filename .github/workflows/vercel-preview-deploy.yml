@@ -92,22 +92,25 @@ jobs:
 
           # Add the domain to the project with --force flag
           echo "Adding domain to project: $FULL_DOMAIN"
-          if ! vercel domains add $FULL_DOMAIN next-tutorial-20250208 --token=${{ secrets.VERCEL_TOKEN }}; then
-            echo "Failed to add domain to project"
-            exit 1
-          fi
 
-          # Wait for domain propagation
-          sleep 10
+          vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}
 
-          # Assign the domain to the deployment
-          echo "Assigning domain to deployment: $FULL_DOMAIN"
-          if ! vercel alias set ${{ env.DEPLOYMENT_URL }} $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
-            echo "Failed to assign custom domain"
-            exit 1
-          fi
-          echo "Custom domain assigned successfully: $FULL_DOMAIN"
-          echo "PREVIEW_URL=https://$FULL_DOMAIN" >> $GITHUB_ENV
+          # if ! vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
+          #   echo "Failed to add domain to project"
+          #   exit 1
+          # fi
+
+          # # Wait for domain propagation
+          # sleep 10
+
+          # # Assign the domain to the deployment
+          # echo "Assigning domain to deployment: $FULL_DOMAIN"
+          # if ! vercel alias set ${{ env.DEPLOYMENT_URL }} $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
+          #   echo "Failed to assign custom domain"
+          #   exit 1
+          # fi
+          # echo "Custom domain assigned successfully: $FULL_DOMAIN"
+          # echo "PREVIEW_URL=https://$FULL_DOMAIN" >> $GITHUB_ENV
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
