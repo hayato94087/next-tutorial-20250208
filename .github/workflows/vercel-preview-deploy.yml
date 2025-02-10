@@ -90,11 +90,17 @@ jobs:
           FULL_DOMAIN="${RANDOM_SUBDOMAIN}.${{ secrets.DOMAIN }}"
           echo "Generated subdomain: $FULL_DOMAIN"
 
-          # Add the domain to the project
-          if ! vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
+          # Verify domain configuration
+          vercel domains verify ${{ secrets.DOMAIN }} --token=${{ secrets.VERCEL_TOKEN }} || true
+
+          # Add the domain to the project with --force flag
+          if ! vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }} --force; then
             echo "Failed to add domain to project"
             exit 1
           fi
+
+          # Wait for domain propagation
+          sleep 10
 
           # Assign the domain to the deployment
           if ! vercel alias set ${{ env.DEPLOYMENT_URL }} $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
