@@ -95,7 +95,7 @@ jobs:
 
           vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}
 
-          # if ! vercel domains add $FULL_DOMAIN --token=${{ secrets.VERCEL_TOKEN }}; then
+          # if ! vercel domains add next-tutorial.dev --token=${{ secrets.VERCEL_TOKEN }}; then
           #   echo "Failed to add domain to project"
           #   exit 1
           # fi
