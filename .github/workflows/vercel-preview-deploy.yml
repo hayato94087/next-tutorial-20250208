@@ -69,44 +69,8 @@ jobs:
           DEBUG_URL: ${{ secrets.TEST_DEBUG_URL }}
 
       - name: Deploy Project Artifacts to Vercel
-        run: |
-          DEPLOYMENT_OUTPUT=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          DEPLOYMENT_URL=$(echo $DEPLOYMENT_OUTPUT | tr -d '\n')
-          if [ -z "$DEPLOYMENT_URL" ]; then
-            echo "Deployment failed"
-            exit 1
-          fi
-          echo "DEPLOYMENT_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
-          echo "Deployment URL: $DEPLOYMENT_URL"
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           DEBUG_URL: ${{ secrets.TEST_DEBUG_URL }}
-
-      - name: Generate Random Subdomain and Assign Custom Domain
-        run: |
-          # Generate a random 8-character alphanumeric string for the subdomain
-          RANDOM_SUBDOMAIN=$(openssl rand -base64 6 | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
-          FULL_DOMAIN="${RANDOM_SUBDOMAIN}.${{ secrets.DOMAIN }}"
-          echo "Generated subdomain: $FULL_DOMAIN"
-
-          # Add the domain to the project
-          echo "Adding domain to project: $FULL_DOMAIN"
-          vercel domains add next-tutorial.dev --token=${{ secrets.VERCEL_TOKEN }} || true
-
-          # Assign the domain to the deployment
-          echo "Assigning domain to deployment: $FULL_DOMAIN"
-          if ! vercel alias set ${{ env.DEPLOYMENT_URL }} next-tutorial.dev --token=${{ secrets.VERCEL_TOKEN }}; then
-            echo "Failed to assign custom domain"
-            exit 1
-          fi
-          echo "Custom domain assigned successfully: $FULL_DOMAIN"
-          echo "PREVIEW_URL=https://$FULL_DOMAIN" >> $GITHUB_ENV
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Output Preview URL
-        run: |
-          echo "Preview URL: ${{ env.PREVIEW_URL }}"
-          echo "Deployment URL: ${{ env.DEPLOYMENT_URL }}"
